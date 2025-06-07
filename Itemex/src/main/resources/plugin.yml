@@ -60,7 +60,7 @@ permissions:
     default: true
 
 
-    itemex.command.i:
-      description: global command
-      default: true
+  itemex.command.i:
+    description: global command
+    default: true
 
