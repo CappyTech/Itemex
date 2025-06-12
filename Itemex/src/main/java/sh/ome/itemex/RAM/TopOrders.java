@@ -1,4 +1,7 @@
 package sh.ome.itemex.RAM;
+/**
+ * Holds the best buy and sell orders in memory.
+ */
 
 // consumes at 1500 entries = ( 4*8 + 4*8 ) * 1500 = 432,000byte = 421.875kbyte
 

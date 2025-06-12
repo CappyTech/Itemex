@@ -1,4 +1,7 @@
 package sh.ome.itemex.files;
+/**
+ * Manages the categories.yml configuration file and default categories.
+ */
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;

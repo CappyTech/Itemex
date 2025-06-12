@@ -1,4 +1,7 @@
 package sh.ome.itemex.RAM;
+/**
+ * Simple data class representing an order entry.
+ */
 
 public class Order {
     private double price;

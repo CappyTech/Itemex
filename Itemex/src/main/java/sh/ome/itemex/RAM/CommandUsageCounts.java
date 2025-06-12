@@ -1,4 +1,7 @@
 package sh.ome.itemex.RAM;
+/**
+ * Utility container for counting command usages.
+ */
 import java.util.HashMap;
 import java.util.Set;
 

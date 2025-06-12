@@ -1,4 +1,7 @@
 package sh.ome.itemex.functions;
+/**
+ * Tab completion logic for the /ix command.
+ */
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

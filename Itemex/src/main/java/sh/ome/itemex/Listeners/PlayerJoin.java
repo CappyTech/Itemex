@@ -1,4 +1,7 @@
 package sh.ome.itemex.Listeners;
+/**
+ * Event listener that notifies players about payouts and sales when they join.
+ */
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;

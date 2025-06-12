@@ -1,4 +1,7 @@
 package sh.ome.itemex.GUI;
+/**
+ * GUI for manual price entry when creating orders.
+ */
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

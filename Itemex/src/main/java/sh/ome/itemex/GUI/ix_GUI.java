@@ -1,4 +1,7 @@
 package sh.ome.itemex.GUI;
+/**
+ * GUI for the main /ix command menu.
+ */
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

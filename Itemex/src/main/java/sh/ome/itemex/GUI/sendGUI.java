@@ -1,4 +1,7 @@
 package sh.ome.itemex.GUI;
+/**
+ * Simple confirmation menu for sending items.
+ */
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
