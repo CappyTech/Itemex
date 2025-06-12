@@ -1,4 +1,7 @@
 package sh.ome.itemex.commands;
+/**
+ * Implementation of the /ix command.
+ */
 import com.google.gson.Gson;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;

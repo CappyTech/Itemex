@@ -1,4 +1,7 @@
 package sh.ome.itemex.events;
+/**
+ * Enables sign based shops for the plugin.
+ */
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

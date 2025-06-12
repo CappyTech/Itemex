@@ -1,4 +1,7 @@
 package sh.ome.itemex.events;
+/**
+ * Click handler for the /i GUI.
+ */
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

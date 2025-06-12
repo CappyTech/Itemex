@@ -1,4 +1,7 @@
 package sh.ome.itemex.shedule;
+/**
+ * Checks for plugin updates on a timer.
+ */
 
 import sh.ome.itemex.Itemex;
 

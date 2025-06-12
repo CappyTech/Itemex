@@ -1,4 +1,7 @@
 package sh.ome.itemex.commands;
+/**
+ * Collection of helper functions used by commands.
+ */
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

@@ -1,4 +1,7 @@
 package sh.ome.itemex.functions;
+/**
+ * Database access layer for all order related operations.
+ */
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
