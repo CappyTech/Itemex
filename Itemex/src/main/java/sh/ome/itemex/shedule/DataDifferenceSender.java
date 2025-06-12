@@ -1,4 +1,7 @@
 package sh.ome.itemex.shedule;
+/**
+ * Uploads local database differences to the stats server.
+ */
 
 import java.io.BufferedReader;
 import java.io.IOException;

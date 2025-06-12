@@ -30,6 +30,9 @@ changelog 0.22.2
 
 
 package sh.ome.itemex;
+/**
+ * Main plugin class that handles startup and registers commands.
+ */
 
 import com.google.gson.Gson;
 import net.milkbowl.vault.economy.Economy;

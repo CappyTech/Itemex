@@ -1,4 +1,7 @@
 package sh.ome.itemex.GUI;
+/**
+ * GUI used when players set limit order prices.
+ */
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

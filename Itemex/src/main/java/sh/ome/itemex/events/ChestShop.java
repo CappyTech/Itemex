@@ -1,4 +1,7 @@
 package sh.ome.itemex.events;
+/**
+ * Handles interactions with chest based shops.
+ */
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

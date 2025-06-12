@@ -1,4 +1,7 @@
 package sh.ome.itemex.database;
+/**
+ * Creates the SQLite or MariaDB databases used by the plugin.
+ */
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;

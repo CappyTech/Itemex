@@ -1,4 +1,7 @@
 package sh.ome.itemex.GUI;
+/**
+ * GUI for the /i command.
+ */
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

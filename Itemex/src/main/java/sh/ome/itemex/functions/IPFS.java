@@ -1,4 +1,7 @@
 package sh.ome.itemex.functions;
+/**
+ * Handles IPFS uploads for statistics data.
+ */
 
 public class IPFS {
     private String link_CID;

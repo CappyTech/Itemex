@@ -1,4 +1,7 @@
 package sh.ome.itemex.events;
+/**
+ * Click handler for GUI menus opened with /ix.
+ */
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;

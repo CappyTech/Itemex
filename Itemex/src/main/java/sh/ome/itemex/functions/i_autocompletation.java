@@ -1,4 +1,7 @@
 package sh.ome.itemex.functions;
+/**
+ * Tab completion logic for the /i command.
+ */
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

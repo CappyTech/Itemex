@@ -1,4 +1,7 @@
 package sh.ome.itemex.commands;
+/**
+ * Implementation of the /i command.
+ */
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
