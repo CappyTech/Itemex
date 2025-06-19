@@ -525,14 +525,10 @@ public class sqliteDb {
 
     public static OrderBuffer getOrder(String ID, boolean buy_or_sell){
         OrderBuffer buffer = null;
-        Statement stmt = null;
-        String sql;
-
-        //proof if buy or sell
-        if(buy_or_sell) // is buy
-            sql = "SELECT * FROM BUYORDERS WHERE id = '" + ID + "'";
-        else
-            sql = "SELECT * FROM SELLORDERS WHERE id = '" + ID + "'";
+        PreparedStatement pstmt = null;
+        String sql = buy_or_sell ?
+                "SELECT * FROM BUYORDERS WHERE id = ?" :
+                "SELECT * FROM SELLORDERS WHERE id = ?";
 
         if (Itemex.c == null) {
             Itemex.c = createDatabase.createConnection();
@@ -541,21 +537,28 @@ public class sqliteDb {
 
         if (Itemex.c != null) {
             try {
-                stmt = Itemex.c.createStatement();
-
-                stmt.executeUpdate(sql);
-                ResultSet rs = stmt.executeQuery(sql);
+                pstmt = Itemex.c.prepareStatement(sql);
+                pstmt.setString(1, ID);
+                ResultSet rs = pstmt.executeQuery();
                 if (rs.next()) {
-                    buffer = new OrderBuffer(rs.getInt("id"), rs.getString("player_uuid"), rs.getString("itemid"), rs.getString("ordertype"),rs.getInt("amount"), rs.getDouble("price"), rs.getLong("timestamp") );
+                    buffer = new OrderBuffer(
+                            rs.getInt("id"),
+                            rs.getString("player_uuid"),
+                            rs.getString("itemid"),
+                            rs.getString("ordertype"),
+                            rs.getInt("amount"),
+                            rs.getDouble("price"),
+                            rs.getLong("timestamp")
+                    );
                 }
 
             } catch ( Exception e ) {
                 System.err.println( "at getOrder: " + e);
-                
+
             } finally {
-                if (stmt != null) {
+                if (pstmt != null) {
                     try {
-                        stmt.close();
+                        pstmt.close();
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -864,7 +867,7 @@ public class sqliteDb {
 
     public static boolean updateOrder(String table_name, int ID, int amount, double price, String ordertype, String itemid) {
         //getLogger().info("# DEBUG - updateOrder");
-        Statement stmt = null;
+        PreparedStatement pstmt = null;
         int update_status = 0;
         String sql;
 
@@ -879,23 +882,32 @@ public class sqliteDb {
 
         if (Itemex.c != null) {
             try {
-                stmt = Itemex.c.createStatement();
                 if(price > 0)
-                    sql = "UPDATE " + table_name + " SET ordertype = '" + ordertype + "',  amount = " + amount +  ", price = " + price + " WHERE id = " + ID;
-                else { // chest shop
-                    sql = "UPDATE " + table_name + " SET amount = " + amount + " WHERE id = " + ID;
+                    sql = "UPDATE " + table_name + " SET ordertype = ?, amount = ?, price = ? WHERE id = ?";
+                else // chest shop
+                    sql = "UPDATE " + table_name + " SET amount = ? WHERE id = ?";
+
+                pstmt = Itemex.c.prepareStatement(sql);
+                if(price > 0) {
+                    pstmt.setString(1, ordertype);
+                    pstmt.setInt(2, amount);
+                    pstmt.setDouble(3, price);
+                    pstmt.setInt(4, ID);
+                } else {
+                    pstmt.setInt(1, amount);
+                    pstmt.setInt(2, ID);
                 }
 
-                update_status = stmt.executeUpdate(sql);
+                update_status = pstmt.executeUpdate();
 
             } catch ( Exception e ) {
                 System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 
                 return false;
             } finally {
-                if (stmt != null) {
+                if (pstmt != null) {
                     try {
-                        stmt.close();
+                        pstmt.close();
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -909,13 +921,10 @@ public class sqliteDb {
 
 
     public static boolean blockOrder(String table_name, int ID) {
-        // Only allow known table names to avoid SQL injection
-        if (!"SELLORDERS".equals(table_name) && !"BUYORDERS".equals(table_name)) {
-            return false;
-        }
+        //getLogger().info("# DEBUG - blockOrder");
         PreparedStatement pstmt = null;
         int update_status = 0;
-        String sql = "UPDATE " + table_name + " SET amount = 0 WHERE id = ?";
+        String sql;
 
         if (Itemex.c == null) {
             Itemex.c = createDatabase.createConnection();
@@ -924,6 +933,7 @@ public class sqliteDb {
 
         if (Itemex.c != null) {
             try {
+                sql = "UPDATE " + table_name + " SET amount = 0 WHERE id = ?";
                 pstmt = Itemex.c.prepareStatement(sql);
                 pstmt.setInt(1, ID);
                 update_status = pstmt.executeUpdate();
