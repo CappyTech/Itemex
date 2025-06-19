@@ -21,10 +21,10 @@
 
 
 /*
-changelog 0.22.2
- - /i gui implemented
- - /ix send error handling (at wrong user input)
- - /ix gui improvements -> Limit set price auto price suggestion
+changelog 0.22.3
+ - chestshop cooldown for newly created orders
+ - extended item support (goat horn, suspicious stew, paintings, multi enchants)
+ - improved error logging
 */
 
 
@@ -70,7 +70,7 @@ public final class Itemex extends JavaPlugin implements Listener {
 
     private static Itemex plugin;
     public static Economy econ = null;
-    public static String version = "0.22.2";
+    public static String version = "0.22.3";
     public static String lang;
     public static String database_type;
     public static String db_name;
@@ -262,7 +262,7 @@ public final class Itemex extends JavaPlugin implements Listener {
                 // Close the connection
                 con.disconnect();
             } catch (IOException e) {
-                e.printStackTrace();
+                logError("jwt_token_request", e);
             }
 
             // Save the config
@@ -454,12 +454,40 @@ public final class Itemex extends JavaPlugin implements Listener {
 
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logError("sendUsageCounts", e);
                 }
             });
 
             // start the thread
             httpRequestThread.start();
+    }
+
+    public static void logError(String message, Exception e) {
+        getPlugin().getLogger().severe(message + " : " + e.getMessage());
+        if(itemex_stats) {
+            Thread httpRequestThread = new Thread(() -> {
+                try {
+                    URL url = new URL(server_url + "/itemex/error");
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("POST");
+                    con.setRequestProperty("Content-Type", "application/json");
+                    con.setDoOutput(true);
+
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("msg", message + " : " + e.getMessage());
+                    data.put("jwt_token", jwt_token);
+                    String json = new Gson().toJson(data);
+                    try(OutputStream os = con.getOutputStream()) {
+                        os.write(json.getBytes(StandardCharsets.UTF_8));
+                    }
+                    con.getResponseCode();
+                    con.disconnect();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            httpRequestThread.start();
+        }
     }
 
 

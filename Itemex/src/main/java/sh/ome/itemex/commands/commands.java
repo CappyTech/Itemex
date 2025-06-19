@@ -37,17 +37,12 @@ public class commands {
         //getLogger().info("# DEBUG (get_itemid): " + json);
         Gson gson = new Gson();
         List<Map<String, Object>> list = gson.fromJson(json, List.class);
-        int enc_counter = 0;
         String itemid ="";
         for (Map<String, Object> map : list) {
             if (map.containsKey("itemid")) {
                 itemid = map.get("itemid").toString();
             }
-            if(map.containsKey("enc"))
-                enc_counter++;
         }
-        if(enc_counter > 1)
-            return "more_than_one_enchantment_not_supported";
         return itemid;
     }
 
@@ -57,8 +52,6 @@ public class commands {
         if (elements.length == 1) {
             // Normal item
             return "[{\"itemid\":\"" + elements[0].toUpperCase() +"\"}]";
-        } else if (elements[0].equals("ENCHANTED_BOOK")) {
-            return "[{\"itemid\":\"" + elements[0].toUpperCase() + "\"},{\"enc\":\"" + elements[1] + "\",\"lev\":" + elements[2] + "}]";
         } else if (elements[0].equals("POTION") || elements[0].equals("SPLASH_POTION") || elements[0].equals("LINGERING_POTION") || elements[0].equals("TIPPED_ARROW")) {
             return "[{\"itemid\":\"" + elements[0].toUpperCase() + "\"},{\"bp_ext\":" + elements[2] + ",\"bp_name\":\"" + elements[1] + "\",\"bp_upg\":" + elements[3] + "}]";
         } else if (elements[0].equals("GOAT_HORN")) {
@@ -70,7 +63,12 @@ public class commands {
         } else if (elements[0].equals("FIREWORK_ROCKET")) {
             return "[{\"itemid\":\"" + elements[0].toUpperCase() + "\"},{\"f_dur\":" + elements[1] + "}]";
         } else {
-            return "[{\"itemid\":\"" + elements[0].toUpperCase() +"\"}]";
+            StringBuilder json = new StringBuilder("[{\"itemid\":\"").append(elements[0].toUpperCase()).append("\"}");
+            for(int i=1;i<elements.length-1;i+=2){
+                json.append(",{\"enc\":\"").append(elements[i]).append("\",\"lev\":").append(elements[i+1]).append("}");
+            }
+            json.append("]");
+            return json.toString();
         }
     }
 
@@ -81,9 +79,6 @@ public class commands {
         int enc_counter = 0;
         String itemid = "";
 
-        // enchanted book
-        String enc = "";
-        String lev = "";
 
         // tipped arrow or potion
         String bp_name = "";
@@ -104,17 +99,19 @@ public class commands {
         // firework rocket
         String f_dur = "";
 
+        List<String> encs = new ArrayList<>();
+        List<String> levs = new ArrayList<>();
         for (Map<String, Object> map : list) {
             if (map.containsKey("itemid"))
                 itemid = map.get("itemid").toString();
 
             if(map.containsKey("enc")) {
-                enc = map.get("enc").toString();
+                encs.add(map.get("enc").toString());
                 enc_counter++;
             }
             if(map.containsKey("lev")) {
                 Double doubleValue = (Double) map.get("lev");
-                lev = Integer.toString(doubleValue.intValue());
+                levs.add(Integer.toString(doubleValue.intValue()));
             }
 
             if(map.containsKey("bp_name"))
@@ -147,10 +144,13 @@ public class commands {
             }
         }
 
-        if(enc_counter > 1)
-            return "more_than_one_enchantment_not_supported";
-        else if(itemid.equals("ENCHANTED_BOOK"))
-            return itemid + ":" + enc + ":" + lev;
+        if(enc_counter > 0) {
+            StringBuilder sb = new StringBuilder(itemid);
+            for(int i=0;i<enc_counter;i++) {
+                sb.append(":" + encs.get(i) + ":" + levs.get(i));
+            }
+            return sb.toString();
+        }
         else if(itemid.equals("POTION") || itemid.equals("SPLASH_POTION") || itemid.equals("LINGERING_POTION") || itemid.equals("TIPPED_ARROW"))
             return itemid + ":" + bp_name + ":" + bp_ext + ":" +  bp_upg;
         else if(itemid.equals("GOAT_HORN"))

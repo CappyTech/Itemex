@@ -67,12 +67,10 @@ public class ix_autocompletion implements TabCompleter {
                             if(item != null && !item.getType().toString().equals("AIR") ) { // add all items if not AIR
                                 String json = identify_item(item);
                                 String meta = get_meta(json);
-                                if(!meta.equals("more_than_one_enchantment_not_supported")) {
-                                    if (args.length > 1 && meta.toLowerCase().contains(args[1].toLowerCase())) { // Check without case sensitivity
-                                        materialNames.add(meta);
-                                    } else if (args.length == 1) { // if no filter is provided, add all items
-                                        materialNames.add(meta);
-                                    }
+                                if (args.length > 1 && meta.toLowerCase().contains(args[1].toLowerCase())) {
+                                    materialNames.add(meta);
+                                } else if (args.length == 1) {
+                                    materialNames.add(meta);
                                 }
                             }
                         }
@@ -159,12 +157,10 @@ public class ix_autocompletion implements TabCompleter {
                         if (item != null && !item.getType().toString().equals("AIR")) { // add all items if not AIR
                             String json = identify_item(item);
                             String meta = get_meta(json);
-                            if (!meta.equals("more_than_one_enchantment_not_supported")) {
-                                if (args.length > 1 && meta.toLowerCase().contains(args[1].toLowerCase())) { // Check without case sensitivity
-                                    materialNames.add(meta);
-                                } else if (args.length == 1) { // if no filter is provided, add all items
-                                    materialNames.add(meta);
-                                }
+                            if (args.length > 1 && meta.toLowerCase().contains(args[1].toLowerCase())) {
+                                materialNames.add(meta);
+                            } else if (args.length == 1) {
+                                materialNames.add(meta);
                             }
                         }
                     }
@@ -223,12 +219,10 @@ public class ix_autocompletion implements TabCompleter {
                         if(item != null && !item.getType().toString().equals("AIR") ) { // add all items if not AIR
                             String json = identify_item(item);
                             String meta = get_meta(json);
-                            if(!meta.equals("more_than_one_enchantment_not_supported")) {
-                                if (args.length > 1 && meta.toLowerCase().contains(args[2].toLowerCase())) { // Check without case sensitivity
-                                    materialNames.add(meta);
-                                } else if (args.length == 1) { // if no filter is provided, add all items
-                                    materialNames.add(meta);
-                                }
+                            if (args.length > 1 && meta.toLowerCase().contains(args[2].toLowerCase())) {
+                                materialNames.add(meta);
+                            } else if (args.length == 1) {
+                                materialNames.add(meta);
                             }
                         }
                     }
