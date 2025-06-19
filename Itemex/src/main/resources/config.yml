@@ -9,7 +9,7 @@ db_name: itemex_db
 db_hostname: localhost
 db_port: 3306
 db_username: itemex
-db_passwd: Str0ngP&&7w0rt
+db_passwd: CHANGEME
 
 # The Admin function creates a buy- and sell order for each item with a spread (gap between buy and sell order) of 100% by default. You can edit this
 # variable by editing "admin_function_percentage".

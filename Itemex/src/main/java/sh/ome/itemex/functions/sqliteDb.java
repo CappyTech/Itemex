@@ -909,10 +909,13 @@ public class sqliteDb {
 
 
     public static boolean blockOrder(String table_name, int ID) {
-        //getLogger().info("# DEBUG - blockOrder");
-        Statement stmt = null;
+        // Only allow known table names to avoid SQL injection
+        if (!"SELLORDERS".equals(table_name) && !"BUYORDERS".equals(table_name)) {
+            return false;
+        }
+        PreparedStatement pstmt = null;
         int update_status = 0;
-        String sql;
+        String sql = "UPDATE " + table_name + " SET amount = 0 WHERE id = ?";
 
         if (Itemex.c == null) {
             Itemex.c = createDatabase.createConnection();
@@ -921,19 +924,18 @@ public class sqliteDb {
 
         if (Itemex.c != null) {
             try {
-                stmt = Itemex.c.createStatement();
-                sql = "UPDATE " + table_name + " SET amount = 0 WHERE id = " + ID;
-
-                update_status = stmt.executeUpdate(sql);
+                pstmt = Itemex.c.prepareStatement(sql);
+                pstmt.setInt(1, ID);
+                update_status = pstmt.executeUpdate();
 
             } catch ( Exception e ) {
                 System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 
                 return false;
             } finally {
-                if (stmt != null) {
+                if (pstmt != null) {
                     try {
-                        stmt.close();
+                        pstmt.close();
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
