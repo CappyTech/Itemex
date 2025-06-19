@@ -70,7 +70,7 @@ public final class Itemex extends JavaPlugin implements Listener {
 
     private static Itemex plugin;
     public static Economy econ = null;
-    public static String version = "0.22.3";
+    public static String version = "0.22.4";
     public static String lang;
     public static String database_type;
     public static String db_name;
