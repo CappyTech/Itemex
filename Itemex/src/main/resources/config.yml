@@ -50,6 +50,7 @@ pre_release: true
 
 # If this option is enabled you will get access to our Itemex Web Interface (will work like luckperms editor)
 webui: true
+web_port: 8080
 
 # This notifies the player on every start how much they sold
 sales_notification: true
