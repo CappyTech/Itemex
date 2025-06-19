@@ -430,6 +430,40 @@ public class ix_command implements CommandExecutor {
                 } // end sell
 
 
+                else if (strings[0].equalsIgnoreCase("fastsell")) {
+
+                    if (!p.hasPermission("itemex.command.ix.fastsell")) {
+                        p.sendMessage(ChatColor.RED + Itemex.language.getString("message_no_permission"));
+                        return true;
+                    }
+
+                    ItemStack item = p.getInventory().getItemInMainHand();
+                    if (item == null || item.getType() == Material.AIR) {
+                        p.sendMessage(Itemex.language.getString("noting_in_right_hand"));
+                        return true;
+                    }
+
+                    String item_json = identify_item(item);
+                    String itemid = get_itemid(item_json);
+
+                    if (Itemex.getPlugin().mtop.get(item_json) == null) {
+                        TopOrders topo = new TopOrders();
+                        Itemex.getPlugin().mtop.put(item_json, topo);
+                    }
+
+                    if (!Itemex.admin_function && Itemex.getPlugin().mtop.get(item_json).get_top_buyorder_prices()[0] == 0) {
+                        TextComponent message = new TextComponent(ChatColor.RED + Itemex.language.getString("sell_no_buyorders_to_sell") + ChatColor.WHITE + itemid);
+                        p.spigot().sendMessage(message);
+                        return true;
+                    }
+
+                    int amount = item.getAmount();
+                    double price = Itemex.getPlugin().mtop.get(item_json).get_top_buyorder_prices()[3];
+                    p.sendMessage(create_order(p, item_json, price, amount, "sell", "market"));
+
+                }
+
+
                 else if (strings[0].equals("price")) {
                     if (!p.hasPermission("itemex.command.price")) {
                         p.sendMessage(ChatColor.RED + Itemex.language.getString("message_no_permission"));

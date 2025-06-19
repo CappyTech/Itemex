@@ -28,6 +28,9 @@ permissions:
   itemex.command.ix.sell:
     description: creates sell order
     default: true
+  itemex.command.ix.fastsell:
+    description: quickly sell item in hand
+    default: true
   itemex.command.ix.withdraw:
     description: list or withdraw all your available payouts
     default: true
