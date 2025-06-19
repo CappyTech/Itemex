@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
@@ -41,26 +40,26 @@ public class DataDifferenceSender {
                 URL url = new URL(Itemex.server_url + "/itemex");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-                // Timeout festlegen
-                con.setConnectTimeout(5000); // 5 Sekunden Timeout für den Verbindungsaufbau
-                con.setReadTimeout(5000);    // 5 Sekunden Timeout für das Lesen von Daten
+                // Set connection timeouts
+                con.setConnectTimeout(5000); // 5 second timeout for the connection setup
+                con.setReadTimeout(5000);    // 5 second timeout for reading data
 
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Content-Type", "application/json");
                 con.setDoOutput(true);
 
-                // Karte erstellen, um Zähler und ID zu speichern
+                // Create a map to store counters and the ID
                 Map<String, Object> data = new HashMap<>();
                 data.put("jwt_token", Itemex.jwt_token);
                 data.put("latest_ids", getLatestIdsString());
 
-                // Karte in JSON-String konvertieren und in den Ausgabestrom schreiben
+                // Convert map to JSON string and write it to the output stream
                 String json = new Gson().toJson(data);
                 try (OutputStream os = con.getOutputStream()) {
                     os.write(json.getBytes(StandardCharsets.UTF_8));
                 }
 
-                // Antwortcode überprüfen und Verbindung schließen
+                // Check response code and close connection
                 int responseCode = con.getResponseCode();
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -138,7 +137,7 @@ public class DataDifferenceSender {
             String[] serverIds = responseIds.split(":");
 
             if (latestIds.length != serverIds.length) {
-                System.err.println("Ungültige Serverantwort!");
+                System.err.println("Invalid server response!");
                 return;
             }
 
@@ -213,26 +212,26 @@ public class DataDifferenceSender {
                 URL url = new URL(Itemex.server_url + "/itemex/");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-                // Timeout festlegen
-                con.setConnectTimeout(15000); // 15 Sekunden Timeout für den Verbindungsaufbau
-                con.setReadTimeout(15000);    // 15 Sekunden Timeout für das Lesen von Daten
+                // Set connection timeouts
+                con.setConnectTimeout(15000); // 15 second timeout for the connection setup
+                con.setReadTimeout(15000);    // 15 second timeout for reading data
 
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Content-Type", "application/json");
                 con.setDoOutput(true);
 
-                // Karte erstellen und das eingegebene JSON einfügen
+                // Create payload and insert the provided JSON
                 Map<String, Object> payload = new HashMap<>();
                 payload.put("jwt_token", Itemex.jwt_token);
                 payload.put("data", new Gson().fromJson(inputJson, Object.class));
 
-                // Karte in JSON-String konvertieren und in den Ausgabestrom schreiben
+                // Convert map to JSON string and write it to the output stream
                 String jsonPayload = new Gson().toJson(payload);
                 try (OutputStream os = con.getOutputStream()) {
                     os.write(jsonPayload.getBytes(StandardCharsets.UTF_8));
                 }
 
-                // Antwortcode überprüfen und Verbindung schließen
+                // Check response code and close connection
                 int responseCode = con.getResponseCode();
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {

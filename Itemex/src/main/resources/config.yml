@@ -11,7 +11,7 @@ db_port: 3306
 db_username: itemex
 db_passwd: Str0ngP&&7w0rt
 
-# The Admin function creates a buy- and sellorder each item with a spread (gab between buy- and sellorder) of 100% by default. You can edit this
+# The Admin function creates a buy- and sell order for each item with a spread (gap between buy and sell order) of 100% by default. You can edit this
 # variable by editing "admin_function_percentage".
 admin_function: false
 admin_function_spread_percentage: 100.0
@@ -19,7 +19,7 @@ admin_function_spread_percentage: 100.0
 # If a order will be fulfilled with the admin order, the order will be recreated with an adjusted price by that percentage value (sellorder = increase price; buyorder = decrease price)
 admin_function_price_change_percentage: 10
 
-# If there is no buy limit or sell limit order at an item, Itemex use this value for initial admin-sellorder-price and adds admin_function_percentage (default 100) to the admin-buyorder-price.
+# If there is no buy limit or sell limit order for an item, Itemex uses this value for the initial admin sell order price and adds admin_function_percentage (default 100) to the admin buy order price.
 admin_function_initial_last_price: 100
 
 # currency representation
@@ -51,7 +51,7 @@ pre_release: true
 # If this option is enabled you will get access to our Itemex Web Interface (will work like luckperms editor)
 webui: true
 
-# This notificate the player on every start, how much he sold
+# This notifies the player on every start how much they sold
 sales_notification: true
 
 # Turn on the chestshop feature

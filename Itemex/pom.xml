@@ -6,7 +6,7 @@
 
   <groupId>sh.ome</groupId>
   <artifactId>itemex</artifactId>
-  <version>0.21.5</version>
+  <version>0.22.2</version>
   <packaging>jar</packaging>
 
   <name>Itemex</name>
@@ -86,7 +86,7 @@
     <dependency>
       <groupId>org.mariadb.jdbc</groupId>
       <artifactId>mariadb-java-client</artifactId>
-      <version>2.7.3</version>  <!-- Aktuelle Version ersetzen -->
+      <version>2.7.3</version>  <!-- Use the latest version -->
     </dependency>
 
 
