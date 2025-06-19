@@ -54,7 +54,7 @@ public class CategoryFile {
     }
 
 
-    public void seDetault() {
+    public void setDefault() {
         //file_config.setDefaults("Test:", "Test");
     }
 

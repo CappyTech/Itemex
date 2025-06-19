@@ -32,8 +32,8 @@ permissions:
     description: list or withdraw all your available payouts
     default: true
   itemex.command.ix.deposit:
-      description: deposit items from your inventory
-      default: true
+    description: deposit items from your inventory
+    default: true
   itemex.command.ix.order.list:
     description: list all own buy- and sellorders
     default: true

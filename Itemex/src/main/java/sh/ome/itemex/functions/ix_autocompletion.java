@@ -18,7 +18,7 @@ import java.util.List;
 import static sh.ome.itemex.commands.commands.*;
 import static sh.ome.itemex.functions.sqliteDb.getPayout;
 
-public class ix_autocompletation implements TabCompleter {
+public class ix_autocompletion implements TabCompleter {
 
     private static final int MAX_BUFFER = 1000000000;
 

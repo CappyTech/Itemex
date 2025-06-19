@@ -7,7 +7,7 @@ import sqlite3
 import pymysql
 
 def create_tables_in_mariadb(maria_cursor):
-    # Create table statements für MariaDB
+    # Create table statements for MariaDB
     tables = {
         "SELLORDERS": """
             CREATE TABLE IF NOT EXISTS SELLORDERS (
@@ -74,25 +74,25 @@ def create_tables_in_mariadb(maria_cursor):
         maria_cursor.execute(statement)
 
 def transfer_data(sqlite_db_file, maria_db_config):
-    # Verbindung zu SQLite
+    # Connect to SQLite
     sqlite_conn = sqlite3.connect(sqlite_db_file)
     sqlite_cursor = sqlite_conn.cursor()
 
-    # Verbindung zu MariaDB
+    # Connect to MariaDB
     maria_conn = pymysql.connect(**maria_db_config)
     maria_cursor = maria_conn.cursor()
 
-    # Tabellen in MariaDB erstellen, falls sie nicht existieren
+    # Create tables in MariaDB if they do not exist
     create_tables_in_mariadb(maria_cursor)
 
-    # Liste der Tabellen
+    # List of tables
     table_names = [
         "SELLORDERS", "BUYORDERS", "FULFILLEDORDERS", "PAYOUTS",
         "SETTINGS", "SELL_NOTIFICATION"
     ]
 
     for table in table_names:
-        # Daten von SQLite abrufen
+        # Fetch data from SQLite
         sqlite_cursor.execute(f"SELECT * FROM {table}")
         rows = sqlite_cursor.fetchall()
 
@@ -116,18 +116,18 @@ def transfer_data(sqlite_db_file, maria_db_config):
                     print(f"Error inserting data into table {table}, data: {row}. Error: {e}")
 
 
-    # Verbindungen schließen
+    # Close connections
     sqlite_cursor.close()
     sqlite_conn.close()
     maria_cursor.close()
     maria_conn.close()
 
 if __name__ == "__main__":
-    SQLITE_DB_FILE = 'itemex.db'                    # if this program isn't in the same folder, you have to use the full path
+    SQLITE_DB_FILE = 'itemex.db'                    # if this program isn't in the same folder, use the full path
     MARIA_DB_CONFIG = {
-        'host': 'localhost',                        # ip address or domain of your MariaDB or MySQL server
+        'host': 'localhost',                        # IP address or domain of your MariaDB or MySQL server
         'user': 'root',         
         'password': 'password',
-        'db': 'itemex_db'                           # name of the database ( you have to create in manually )
+        'db': 'itemex_db'                           # name of the database (you have to create it manually)
     }
     transfer_data(SQLITE_DB_FILE, MARIA_DB_CONFIG)

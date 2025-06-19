@@ -49,8 +49,8 @@ import sh.ome.itemex.events.SignShop;
 import sh.ome.itemex.events.i_ClickGUI;
 import sh.ome.itemex.files.CategoryFile;
 import sh.ome.itemex.commands.ix_command;
-import sh.ome.itemex.functions.i_autocompletation;
-import sh.ome.itemex.functions.ix_autocompletation;
+import sh.ome.itemex.functions.i_autocompletion;
+import sh.ome.itemex.functions.ix_autocompletion;
 import sh.ome.itemex.functions.sqliteDb;
 import sh.ome.itemex.shedule.DataDifferenceSender;
 import sh.ome.itemex.shedule.Metrics;
@@ -151,9 +151,9 @@ public final class Itemex extends JavaPlugin implements Listener {
         getLogger().info("\n\n");
 
         getCommand("ix").setExecutor(new ix_command());
-        getCommand("ix").setTabCompleter(new ix_autocompletation());
+        getCommand("ix").setTabCompleter(new ix_autocompletion());
         getCommand("i").setExecutor(new i_command());
-        getCommand("i").setTabCompleter(new i_autocompletation());
+        getCommand("i").setTabCompleter(new i_autocompletion());
 
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
         getServer().getPluginManager().registerEvents(new ix_ClickGUI(), this);
