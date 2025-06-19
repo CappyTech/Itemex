@@ -777,6 +777,55 @@ public class sqliteDb {
         return buffer;
     }
 
+    /**
+     * Returns a paginated list of orders for an item.
+     *
+     * @param table  "BUYORDERS" or "SELLORDERS"
+     * @param itemid Item identifier
+     * @param limit  maximum number of entries to return
+     * @param offset offset into the result set
+     */
+    public static ArrayList<OrderBuffer> getOrders(String table, String itemid, int limit, int offset) {
+        ArrayList<OrderBuffer> buffer = new ArrayList<>();
+
+        String sql = null;
+        if (table.equals("SELLORDERS")) {
+            sql = "SELECT * FROM SELLORDERS WHERE itemid = ? ORDER by price ASC LIMIT ? OFFSET ?";
+        } else if (table.equals("BUYORDERS")) {
+            sql = "SELECT * FROM BUYORDERS WHERE itemid = ? ORDER by price DESC LIMIT ? OFFSET ?";
+        }
+
+        if (Itemex.c == null) {
+            Itemex.c = createDatabase.createConnection();
+            getLogger().info("# WARN - reopen Database");
+        }
+
+        if (Itemex.c != null && sql != null) {
+            try (PreparedStatement stmt = Itemex.c.prepareStatement(sql)) {
+                stmt.setString(1, itemid);
+                stmt.setInt(2, limit);
+                stmt.setInt(3, offset);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        buffer.add(new OrderBuffer(
+                                rs.getInt("id"),
+                                rs.getString("player_uuid"),
+                                rs.getString("itemid"),
+                                rs.getString("ordertype"),
+                                rs.getInt("amount"),
+                                rs.getDouble("price"),
+                                rs.getLong("timestamp")
+                        ));
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            }
+        }
+
+        return buffer;
+    }
+
 
 
 
@@ -847,6 +896,29 @@ public class sqliteDb {
         }
 
         return items;
+    }
+
+    /** Count total orders in the given table. */
+    public static int countOrders(String table) {
+        String sql = "SELECT COUNT(*) as cnt FROM " + table;
+
+        if (Itemex.c == null) {
+            Itemex.c = createDatabase.createConnection();
+            getLogger().info("# WARN - reopen Database");
+        }
+
+        if (Itemex.c != null) {
+            try (Statement stmt = Itemex.c.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    return rs.getInt("cnt");
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            }
+        }
+
+        return 0;
     }
 
 
