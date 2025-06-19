@@ -752,7 +752,9 @@ public class ix_command implements CommandExecutor {
 
 
 
-                else if (strings[0].equals("whatIsInMyRightHand")) {
+                else if (strings[0].equalsIgnoreCase("whatIsInMyRightHand") ||
+                        strings[0].equalsIgnoreCase("righthand") ||
+                        strings[0].equalsIgnoreCase("rh")) {
 
                     if (!p.hasPermission("itemex.command.ix.whatIsInMyRightHand")) {
                         p.sendMessage(ChatColor.RED + Itemex.language.getString("message_no_permission"));
