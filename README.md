@@ -47,3 +47,10 @@ web_port: 8080
 
 Restart the server after changing the config.
 
+## Contributing Translations
+
+Language files are located in `Itemex/src/main/resources/` as `lang_<code>.yml`.
+To add a new locale copy `lang_en.yml` to a new file, translate the values and
+open a pull request with the new file. A Portuguese translation (`lang_pt.yml`)
+is provided as a starting point.
+

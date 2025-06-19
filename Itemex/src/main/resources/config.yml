@@ -1,4 +1,4 @@
-# Language cn, de, en, es, fr, ru supported by default
+# Language cn, de, en, es, fr, ru, pt supported by default
 lang: en
 
 # Choose your database architecture <sqlite | mariadb> (if you are using mysql type in mariadb)

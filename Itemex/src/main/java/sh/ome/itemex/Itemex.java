@@ -307,6 +307,10 @@ public final class Itemex extends JavaPlugin implements Listener {
         saveResource("lang_ru.yml", true);
         YamlConfiguration ru_lang = YamlConfiguration.loadConfiguration(ru_lang_file);
 
+        File pt_lang_file = new File(getDataFolder(), "lang_pt.yml");
+        saveResource("lang_pt.yml", true);
+        YamlConfiguration pt_lang = YamlConfiguration.loadConfiguration(pt_lang_file);
+
 
         // set language from config.yml to global language
         switch(this.lang) {
@@ -324,6 +328,9 @@ public final class Itemex extends JavaPlugin implements Listener {
                 break;
             case "fr":
                 this.language = fr_lang;
+                break;
+            case "pt":
+                this.language = pt_lang;
                 break;
             case "ru":
                 this.language = ru_lang;
