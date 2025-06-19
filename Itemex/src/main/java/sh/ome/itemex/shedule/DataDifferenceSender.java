@@ -81,7 +81,7 @@ public class DataDifferenceSender {
 
                 con.disconnect();
             } catch (Exception e) {
-                e.printStackTrace();
+                Itemex.logError("sendDiff", e);
             }
         });
         return "string";
@@ -159,7 +159,7 @@ public class DataDifferenceSender {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Itemex.logError("getLatestIds", e);
         }
     }
 
@@ -253,7 +253,7 @@ public class DataDifferenceSender {
 
                 con.disconnect();
             } catch (Exception e) {
-                e.printStackTrace();
+                Itemex.logError("sendComplete", e);
             }
         });
     }
