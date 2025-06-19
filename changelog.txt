@@ -3,3 +3,6 @@
 ## [0.1.0] - Initial creation of agent instructions and changelog
 - Added `agent.md` with instructions on changelog usage and semantic versioning.
 - Created `changelog.txt`.
+
+## [0.1.1] - Fix order unlisting dup bug
+- Closed the GUI after unlisting an order to prevent duplicate item payouts.
