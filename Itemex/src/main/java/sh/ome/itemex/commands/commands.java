@@ -551,7 +551,7 @@ public class commands {
                 "\n" + white + "/ix " + light_purple + "order list " + white + "<buyordery | sellorders> *<item id>" + dark_gray + "| " + Itemex.language.getString("help_order_list") +
                 "\n" + white + "/ix " + light_purple + "order close " + white + "<buyordery | sellorders> <order id> " + dark_gray + "| " + Itemex.language.getString("help_order_close") +
 
-                "\n" + white + "/ix " + dark_aqua + "whatIsInMyRightHand" + dark_gray+ "| " + Itemex.language.getString("help_wiimrh") +
+                "\n" + white + "/ix " + dark_aqua + "whatIsInMyRightHand|righthand|rh" + dark_gray+ "| " + Itemex.language.getString("help_wiimrh") +
 
                 "\n" + white + "/ix " + gold + "withdraw list " + dark_gray+ "| " + Itemex.language.getString("help_with_list") +
                 "\n" + white + "/ix " + gold + "withdraw" + white + " <itemname> <amount> " + dark_gray + "| " + Itemex.language.getString("help_withdraw") + dark_purple +

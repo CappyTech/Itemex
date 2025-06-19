@@ -6,3 +6,7 @@
 
 ## [0.1.1] - Fix order unlisting dup bug
 - Closed the GUI after unlisting an order to prevent duplicate item payouts.
+
+## [0.2.0] - Added case-insensitive alias for /ix whatIsInMyRightHand
+- Command now accepts `whatIsInMyRightHand`, `righthand` and `rh` in any case.
+- Updated help text and autocompletion to include new aliases.
