@@ -19,3 +19,6 @@
 ## [0.2.1] - Security and stability fixes
 - Sanitized table name and used prepared statements in `blockOrder` to prevent SQL injection.
 - Replaced default database password in `config.yml` with placeholder.
+
+## [0.2.2] - Added unit tests
+- Introduced JUnit tests for command parsing, order placement, and database operations.
