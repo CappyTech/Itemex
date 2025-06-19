@@ -1,0 +1,5 @@
+# Changelog
+
+## [0.1.0] - Initial creation of agent instructions and changelog
+- Added `agent.md` with instructions on changelog usage and semantic versioning.
+- Created `changelog.txt`.
