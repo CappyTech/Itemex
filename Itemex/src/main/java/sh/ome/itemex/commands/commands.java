@@ -600,7 +600,7 @@ public class commands {
 
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Itemex.logError("sendStats", e);
                 }
             });
 

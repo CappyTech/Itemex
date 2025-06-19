@@ -63,6 +63,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
+import java.time.Instant;
 
 public final class Itemex extends JavaPlugin implements Listener {
 
@@ -70,7 +71,7 @@ public final class Itemex extends JavaPlugin implements Listener {
 
     private static Itemex plugin;
     public static Economy econ = null;
-    public static String version = "0.22.4";
+    public static String version = "0.22.5";
     public static String lang;
     public static String database_type;
     public static String db_name;
@@ -464,6 +465,22 @@ public final class Itemex extends JavaPlugin implements Listener {
 
     public static void logError(String message, Exception e) {
         getPlugin().getLogger().severe(message + " : " + e.getMessage());
+
+        // write to dedicated error log file
+        try {
+            File dataFolder = getPlugin().getDataFolder();
+            if (!dataFolder.exists()) {
+                dataFolder.mkdirs();
+            }
+            File errorLog = new File(dataFolder, "error.log");
+            try (PrintWriter pw = new PrintWriter(new FileWriter(errorLog, true))) {
+                pw.println("[" + Instant.now().toString() + "] " + message);
+                e.printStackTrace(pw);
+            }
+        } catch (IOException ioEx) {
+            getPlugin().getLogger().severe("Failed to write to error log: " + ioEx.getMessage());
+        }
+
         if(itemex_stats) {
             Thread httpRequestThread = new Thread(() -> {
                 try {

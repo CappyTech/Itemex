@@ -211,7 +211,7 @@ public class sqliteDb {
                     try {
                         pstmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
             }
@@ -253,14 +253,14 @@ public class sqliteDb {
                     try {
                         rs.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
                 if (pstmt != null) {
                     try {
                         pstmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
             }
@@ -302,7 +302,7 @@ public class sqliteDb {
                     try {
                         stmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
 
@@ -344,7 +344,7 @@ public class sqliteDb {
                     try {
                         stmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
 
@@ -395,14 +395,14 @@ public class sqliteDb {
 
             } catch (Exception e) {
                 System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                e.printStackTrace();
+                Itemex.logError("sqliteDb", e);
                 return false;
             } finally {
                 if (stmt != null) {
                     try {
                         stmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
 
@@ -450,7 +450,7 @@ public class sqliteDb {
                     try {
                         stmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
 
@@ -513,7 +513,7 @@ public class sqliteDb {
                     try {
                         stmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
             }
@@ -560,7 +560,7 @@ public class sqliteDb {
                     try {
                         pstmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
 
@@ -729,7 +729,7 @@ public class sqliteDb {
                 try {
                     if (stmt != null) stmt.close();
                 } catch (SQLException se) {
-                    se.printStackTrace();
+                    sItemex.logError("sqliteDb", e);
                 }
             }
         }
@@ -909,7 +909,7 @@ public class sqliteDb {
                     try {
                         pstmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
             }
@@ -947,7 +947,7 @@ public class sqliteDb {
                     try {
                         pstmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
             }
@@ -1280,7 +1280,7 @@ public class sqliteDb {
                     try {
                         stmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
             }
@@ -1334,7 +1334,7 @@ public class sqliteDb {
                     try {
                         stmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("sqliteDb", e);
                     }
                 }
             }
@@ -1355,7 +1355,7 @@ public class sqliteDb {
                 try {
                     stmt.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    Itemex.logError("sqliteDb", e);
                 }
             }
         }
@@ -1416,7 +1416,7 @@ public class sqliteDb {
                     }
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    Itemex.logError("sqliteDb", e);
                 }
             }
         }
@@ -1463,7 +1463,7 @@ public class sqliteDb {
                         stmt.close();
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    Itemex.logError("sqliteDb", e);
                 }
             }
         }
@@ -1507,7 +1507,7 @@ public class sqliteDb {
                         stmt.close();
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    Itemex.logError("sqliteDb", e);
                 }
             }
         }
@@ -1552,7 +1552,7 @@ public class sqliteDb {
                     }
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    Itemex.logError("sqliteDb", e);
                 }
             }
         }
@@ -1606,7 +1606,7 @@ public class sqliteDb {
                     }
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    Itemex.logError("sqliteDb", e);
                 }
             }
         }
