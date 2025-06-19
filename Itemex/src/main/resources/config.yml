@@ -1,10 +1,10 @@
 # Language cn, de, en, es, fr, ru supported by default
 lang: en
 
-# Choose your database architecture <sqlite | mariadb> (if you are using mysql type in mariadb)
+# Choose your database architecture <sqlite | mariadb | mysql | mongodb>
 database_type: sqlite
 
-# Necessary if you are using mariadb or mysql
+# Necessary if you are using mariadb, mysql or mongodb
 db_name: itemex_db
 db_hostname: localhost
 db_port: 3306
