@@ -29,7 +29,7 @@ public class ix_autocompletion implements TabCompleter {
             if (args.length == 1) {
                 String input = args[0].toLowerCase();
                 List<String> options;
-                options = Arrays.asList("price", "buy", "sell", "stats", "whatIsInMyRightHand", "withdraw", "deposit", "gui", "order", "setting", "send");
+                options = Arrays.asList("price", "buy", "sell", "stats", "whatIsInMyRightHand", "righthand", "rh", "withdraw", "deposit", "gui", "order", "setting", "send");
                 List<String> filteredOptions = new ArrayList<>();
                 for (String option : options) {
                     if (option.startsWith(input))
@@ -354,7 +354,9 @@ public class ix_autocompletion implements TabCompleter {
 
             else if(args[0].equals("gui"))
                 return Arrays.asList("");
-            else if(args[0].equals("whatIsInMyRightHand"))
+            else if(args[0].equalsIgnoreCase("whatIsInMyRightHand") ||
+                    args[0].equalsIgnoreCase("righthand") ||
+                    args[0].equalsIgnoreCase("rh"))
                 return Arrays.asList("");
 
         }

@@ -3,3 +3,7 @@
 ## [0.1.0] - Initial creation of agent instructions and changelog
 - Added `agent.md` with instructions on changelog usage and semantic versioning.
 - Created `changelog.txt`.
+
+## [0.2.0] - Added case-insensitive alias for /ix whatIsInMyRightHand
+- Command now accepts `whatIsInMyRightHand`, `righthand` and `rh` in any case.
+- Updated help text and autocompletion to include new aliases.
