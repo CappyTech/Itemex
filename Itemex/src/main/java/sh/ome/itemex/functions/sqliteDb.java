@@ -102,7 +102,7 @@ public class sqliteDb {
                     try {
                         stmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("closeStmt", e);
                     }
                 }
             }
@@ -165,7 +165,7 @@ public class sqliteDb {
                     try {
                         pstmt.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Itemex.logError("pstmt_close", e);
                     }
                 }
 
@@ -963,6 +963,11 @@ public class sqliteDb {
             //getLogger().info("SELLORDER: " + se.ordertype + " [" + se.amount + "] $" + se.price);
 
             for (OrderBuffer be : buyorders) {
+                if(be.ordertype.contains("chest") && se.ordertype.contains("chest")) {
+                    long now = Instant.now().getEpochSecond();
+                    if(now - be.timestamp < 5 || now - se.timestamp < 5)
+                        continue;
+                }
                 //getLogger().info("BUYORDER: " + itemid + " " + be.ordertype + " [" + be.amount + "] $" + be.price);
                 //getLogger().info("SELLORDER: " + itemid + " " + se.ordertype + " [" + se.amount + "] $" + se.price);
 

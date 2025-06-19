@@ -267,8 +267,6 @@ public class ix_command implements CommandExecutor {
                         if (strings.length == 1) { // itemid is what player has in hand
                             item_json = identify_item(p.getInventory().getItemInHand());
                             itemid = get_itemid(item_json);
-                            if(itemid.contains("PAINTING") || itemid.contains("GOAT_HORN") || itemid.contains("SUSPICIOUS_STEW")|| itemid.equals("more_than_one_enchantment_not_supported"))
-                                item_supported = false;
                         } else {
                             boolean item_found = false;
                             // check if player have the amount of items provided at the parameter
@@ -338,8 +336,6 @@ public class ix_command implements CommandExecutor {
                         //p.sendMessage("user amount: " + strings[2]);
                         //p.sendMessage("found amount: " + item_counter);
 
-                        if(itemid.contains("PAINTING") || itemid.contains("GOAT_HORN") || itemid.contains("SUSPICIOUS_STEW") || itemid.equals("more_than_one_enchantment_not_supported"))
-                            item_supported = false;
 
                         if (strings[3].equals("market") && item_found == true) {
                             price = Itemex.getPlugin().mtop.get(item_json).get_top_sellorder_prices()[0];
