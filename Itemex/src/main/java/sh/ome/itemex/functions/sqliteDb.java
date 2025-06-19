@@ -1101,15 +1101,32 @@ public class sqliteDb {
         double buyer_total = sub_total + (sub_total/100*Itemex.broker_fee_buyer);
         double seller_total = sub_total - (sub_total/100*Itemex.broker_fee_seller);
 
-        OfflinePlayer o_seller = Bukkit.getOfflinePlayer(UUID.fromString(seller_uuid));
-        OfflinePlayer o_buyer = Bukkit.getOfflinePlayer(UUID.fromString(buyer_uuid));
-        Player seller = Bukkit.getPlayer(UUID.fromString(seller_uuid));
-        Player buyer = Bukkit.getPlayer(UUID.fromString(buyer_uuid));
+        OfflinePlayer o_seller = null;
+        OfflinePlayer o_buyer = null;
+        Player seller = null;
+        Player buyer = null;
 
-        double buyer_balance = econ.getBalance(o_buyer);
+        try {
+            if (seller_uuid != null && !seller_uuid.isEmpty() && !seller_uuid.equalsIgnoreCase("admin")) {
+                UUID suuid = UUID.fromString(seller_uuid);
+                o_seller = Bukkit.getOfflinePlayer(suuid);
+                seller = Bukkit.getPlayer(suuid);
+            }
+        } catch (IllegalArgumentException ignored) {}
+
+        try {
+            if (buyer_uuid != null && !buyer_uuid.isEmpty() && !buyer_uuid.equalsIgnoreCase("admin")) {
+                UUID buuid = UUID.fromString(buyer_uuid);
+                o_buyer = Bukkit.getOfflinePlayer(buuid);
+                buyer = Bukkit.getPlayer(buuid);
+            }
+        } catch (IllegalArgumentException ignored) {}
+
+        double buyer_balance = (o_buyer != null) ? econ.getBalance(o_buyer) : 0;
 
         if(be_ordertype.contains("admin")) {                        // buyorder is admin
-            econ.depositPlayer(o_seller, seller_total);             // give money to seller
+            if(o_seller != null)
+                econ.depositPlayer(o_seller, seller_total);             // give money to seller
             if(seller != null)
                 seller.sendMessage("" + Itemex.language.getString("sellorder_C") + ChatColor.GREEN+ Itemex.language.getString("sq_fulfilled") + ChatColor.WHITE + Itemex.language.getString("sq_you_sold") + " [" + amount + "] "  + get_meta(itemid) + Itemex.language.getString("sq_for") + ChatColor.GREEN + " " + format_price( seller_total ) );
             insertFullfilledOrders(seller_uuid, "admin", itemid, amount, price); // Insert Fullfilled order into db
@@ -1117,7 +1134,8 @@ public class sqliteDb {
         }
         else if(se_ordertype.contains("admin")) {                   // sellorder is admin
             if( buyer_total < buyer_balance) {
-                econ.withdrawPlayer(o_buyer, buyer_total);          // subtract money from buyer
+                if(o_buyer != null)
+                    econ.withdrawPlayer(o_buyer, buyer_total);          // subtract money from buyer
                 if(buyer == null) {
                     insertPayout(buyer_uuid, itemid, amount);       // Insert item payout into db
                 }
@@ -1167,8 +1185,10 @@ public class sqliteDb {
             //getLogger().info("# DEBUG: at refund - Player have enough money" );
 
             if(!be_ordertype.equals("refund")) {
-                econ.depositPlayer(o_seller, seller_total);         // give money to seller
-                econ.withdrawPlayer(o_buyer, buyer_total);          // subtract money from buyer
+                if(o_seller != null)
+                    econ.depositPlayer(o_seller, seller_total);         // give money to seller
+                if(o_buyer != null)
+                    econ.withdrawPlayer(o_buyer, buyer_total);          // subtract money from buyer
             }
 
             //getLogger().info("# DEBUG: insertfulfilledorders at withdaw");
