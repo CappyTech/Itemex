@@ -35,6 +35,8 @@ public class WebServer {
         server.createContext("/items", new ItemsHandler());
         server.createContext("/item/top", new TopHandler());
         server.createContext("/item/history", new HistoryHandler());
+        server.createContext("/item/orders", new OrdersHandler());
+        server.createContext("/stats", new StatsHandler());
         server.setExecutor(null); // creates a default executor
         server.start();
     }
@@ -141,8 +143,68 @@ public class WebServer {
                 item = URLDecoder.decode(id, StandardCharsets.UTF_8.name());
             }
 
-            String[] trades = sqliteDb.get_last_trades(item, "4");
+            int limit = parseInt(params.get("limit"), 4);
+            String[] trades = sqliteDb.get_last_trades(item, Integer.toString(limit));
             String response = new Gson().toJson(trades);
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.sendResponseHeaders(200, response.getBytes().length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        }
+    }
+
+    /** Returns open buy and sell orders for an item with pagination. */
+    private static class OrdersHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            Map<String, String> params = parseQuery(exchange.getRequestURI().getRawQuery());
+            String id = params.get("id");
+            if (id == null) {
+                sendError(exchange, 400, "missing id parameter");
+                return;
+            }
+
+            String item;
+            try {
+                item = new String(Base64.getUrlDecoder().decode(id), StandardCharsets.UTF_8);
+            } catch (IllegalArgumentException e) {
+                item = URLDecoder.decode(id, StandardCharsets.UTF_8.name());
+            }
+
+            int page = parseInt(params.get("page"), 0);
+            int size = parseInt(params.get("size"), 20);
+            if (page < 0) page = 0;
+            if (size <= 0) size = 20;
+            int offset = page * size;
+
+            List<sqliteDb.OrderBuffer> buy = sqliteDb.getOrders("BUYORDERS", item, size, offset);
+            List<sqliteDb.OrderBuffer> sell = sqliteDb.getOrders("SELLORDERS", item, size, offset);
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("buy", buy);
+            result.put("sell", sell);
+
+            String response = new Gson().toJson(result);
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.sendResponseHeaders(200, response.getBytes().length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        }
+    }
+
+    /** Returns basic server statistics. */
+    private static class StatsHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            Map<String, Object> stats = new HashMap<>();
+            stats.put("version", Itemex.version);
+            stats.put("items_loaded", Itemex.getPlugin().mtop.size());
+            stats.put("buy_orders", sqliteDb.countOrders("BUYORDERS"));
+            stats.put("sell_orders", sqliteDb.countOrders("SELLORDERS"));
+
+            String response = new Gson().toJson(stats);
             exchange.getResponseHeaders().set("Content-Type", "application/json");
             exchange.sendResponseHeaders(200, response.getBytes().length);
             try (OutputStream os = exchange.getResponseBody()) {
@@ -157,6 +219,15 @@ public class WebServer {
         exchange.sendResponseHeaders(code, response.getBytes().length);
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
+        }
+    }
+
+    private static int parseInt(String value, int defaultVal) {
+        if (value == null) return defaultVal;
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultVal;
         }
     }
 
