@@ -201,11 +201,11 @@ public class i_ClickGUI implements Listener {
                                 }
                             }
 
-                            if (is_lore)
+                            if (is_lore) {
                                 sqliteDb.PlayercloseOrder(p.getUniqueId().toString(), buy_or_sell, Integer.parseInt(orderID));
-
-                            //e.getView().close();
-                            //return;
+                                e.getView().close();
+                                return;
+                            }
                         } else if (menu_type.contains("Vault")) {
                             ItemStack item = e.getCurrentItem();
                             if (item == null)
