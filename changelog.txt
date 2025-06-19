@@ -9,4 +9,9 @@
 
 ## [0.2.0] - Added case-insensitive alias for /ix whatIsInMyRightHand
 - Command now accepts `whatIsInMyRightHand`, `righthand` and `rh` in any case.
-- Updated help text and autocompletion to include new aliases.
+- Updated help text and autocompletion to include new aliases
+
+## [0.2.1] - Security patches and bug fixes
+- Fixed SQL injection vulnerabilities in order management functions.
+- Corrected getOrder SQL query handling.
+
