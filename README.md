@@ -41,6 +41,8 @@ Edit `plugins/Itemex/config.yml` to configure language, database type (SQLite or
 ```yaml
 lang: en
 # database_type: sqlite or mariadb
+webui: true
+web_port: 8080
 ```
 
 Restart the server after changing the config.

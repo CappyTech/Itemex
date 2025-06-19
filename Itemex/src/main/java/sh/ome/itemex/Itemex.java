@@ -89,6 +89,8 @@ public final class Itemex extends JavaPlugin implements Listener {
     public static char decimal_separator;
     public static char thousand_separator;
     public static String unitLocation;
+    public static boolean webui;
+    public static int web_port;
     public static boolean chestshop;
     public static double broker_fee_buyer;
     public static double broker_fee_seller;
@@ -208,6 +210,9 @@ public final class Itemex extends JavaPlugin implements Listener {
         this.decimal_separator = config.getString("decimal_separator").charAt(0);
         this.thousand_separator = config.getString("thousand_separator").charAt(0);
         this.unitLocation = config.getString("unitLocation");
+
+        this.webui = config.getBoolean("webui");
+        this.web_port = config.getInt("web_port", 8080);
 
 
 
@@ -362,6 +367,15 @@ public final class Itemex extends JavaPlugin implements Listener {
                 DataDifferenceSender.sendDataDifferencesToServer();
             }, 200, 288000); //20 == 1 second -> 288000 = 4h
         }
+        if(webui) {
+            try {
+                sh.ome.itemex.web.WebServer.startServer(web_port);
+                getLogger().info("Web UI started on port " + web_port);
+            } catch (IOException e) {
+                getLogger().warning("Failed to start Web UI");
+            }
+        }
+
 
 
 
@@ -390,6 +404,9 @@ public final class Itemex extends JavaPlugin implements Listener {
     public void onDisable() {
         if(itemex_stats) { //itemex_stats
             checkAndSendUsageCounts();
+        }
+        if(webui) {
+            sh.ome.itemex.web.WebServer.stopServer();
         }
         mtop = null;
         System.gc(); // Suggest JVM to run garbage collection
