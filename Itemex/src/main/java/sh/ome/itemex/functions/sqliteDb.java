@@ -942,6 +942,8 @@ public class sqliteDb {
         PreparedStatement pstmt = null;
         int update_status = 0;
         String sql;
+        boolean chestOrder = ordertype.contains("chest") || price <= 0;
+        long now = Instant.now().getEpochSecond();
 
         if(ordertype.contains("admin")) {
             return true;
@@ -954,20 +956,38 @@ public class sqliteDb {
 
         if (Itemex.c != null) {
             try {
-                if(price > 0)
-                    sql = "UPDATE " + table_name + " SET ordertype = ?, amount = ?, price = ? WHERE id = ?";
-                else // chest shop
-                    sql = "UPDATE " + table_name + " SET amount = ? WHERE id = ?";
+                if(price > 0) {
+                    if(chestOrder)
+                        sql = "UPDATE " + table_name + " SET ordertype = ?, amount = ?, price = ?, timestamp = ? WHERE id = ?";
+                    else
+                        sql = "UPDATE " + table_name + " SET ordertype = ?, amount = ?, price = ? WHERE id = ?";
+                }
+                else { // chest shop
+                    if(chestOrder)
+                        sql = "UPDATE " + table_name + " SET amount = ?, timestamp = ? WHERE id = ?";
+                    else
+                        sql = "UPDATE " + table_name + " SET amount = ? WHERE id = ?";
+                }
 
                 pstmt = Itemex.c.prepareStatement(sql);
                 if(price > 0) {
                     pstmt.setString(1, ordertype);
                     pstmt.setInt(2, amount);
                     pstmt.setDouble(3, price);
-                    pstmt.setInt(4, ID);
+                    if(chestOrder) {
+                        pstmt.setLong(4, now);
+                        pstmt.setInt(5, ID);
+                    } else {
+                        pstmt.setInt(4, ID);
+                    }
                 } else {
                     pstmt.setInt(1, amount);
-                    pstmt.setInt(2, ID);
+                    if(chestOrder) {
+                        pstmt.setLong(2, now);
+                        pstmt.setInt(3, ID);
+                    } else {
+                        pstmt.setInt(2, ID);
+                    }
                 }
 
                 update_status = pstmt.executeUpdate();
