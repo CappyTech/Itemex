@@ -557,6 +557,7 @@ public class commands {
 
                 "\n" + white + "/ix " + green + "buy " + dark_gray + "| " + Itemex.language.getString("help_ix_buy") +
                 "\n" + white + "/ix " + red + "sell " + dark_gray + "| " + Itemex.language.getString("help_ix_sell") +
+                "\n" + white + "/ix " + red + "fastsell " + dark_gray + "| " + Itemex.language.getString("help_ix_fastsell") +
                 "\n" + white + "/ix " + green + "buy " + white + "<itemname> <amount> <limit | market> <price> " + dark_gray + "| " + Itemex.language.getString("help_cbo") +
                 "\n" + white + "/ix " + red + "sell " + white + "<itemname> <amount> <limit | market> <price> " + dark_gray + "| " + Itemex.language.getString("help_cso") + "\n." +
 

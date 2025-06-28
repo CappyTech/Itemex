@@ -20,6 +20,10 @@
 - Sanitized table name and used prepared statements in `blockOrder` to prevent SQL injection.
 - Replaced default database password in `config.yml` with placeholder.
 
+## [0.3.0] - Added fastsell command
+- Implemented `/ix fastsell` to quickly list the held item for sale at the best buy price.
+- Added permission node and updated help text and autocompletion.
+
 ## [0.22.5] - Improved error logging
 - Added centralized error log file for easier troubleshooting.
 - Exceptions now use `logError` to record stack traces and send reports.
