@@ -20,6 +20,10 @@
 - Sanitized table name and used prepared statements in `blockOrder` to prevent SQL injection.
 - Replaced default database password in `config.yml` with placeholder.
 
+## [0.2.2] - Extended item parsing support
+- Added full parsing for goat horns, suspicious stew amplifier, and painting variants.
+- Items with multiple enchantments and metadata attributes now reconstruct correctly.
+
 ## [0.2.2] - Added unit tests
 - Introduced JUnit tests for command parsing, order placement, and database operations.
 
