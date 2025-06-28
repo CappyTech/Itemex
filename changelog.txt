@@ -20,6 +20,9 @@
 - Sanitized table name and used prepared statements in `blockOrder` to prevent SQL injection.
 - Replaced default database password in `config.yml` with placeholder.
 
+## [0.2.2] - Added unit tests
+- Introduced JUnit tests for command parsing, order placement, and database operations.
+
 ## [0.2.2] - Order sorting refinement
 - New orders with tied price are placed after older ones so earlier orders fill first.
 
