@@ -18,4 +18,14 @@
 
 ## [0.2.1] - Security and stability fixes
 - Sanitized table name and used prepared statements in `blockOrder` to prevent SQL injection.
-- Replaced default database password in `config.yml` with placeholder.
+- Replaced default database password in `config.yml` with placeholder
+## [0.22.3] - Extended item support and cooldowns
+- Added chestshop cooldown for newly created orders
+- Added support for new items like goat horn and suspicious stew
+- Improved error logging
+
+## [0.22.4] - Security and stability updates
+- Patched SQL injection vulnerabilities and sanitized queries
+- Improved query handling in database methods
+- Replaced default passwords in configuration with placeholder
+

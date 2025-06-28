@@ -1,4 +1,4 @@
-package sh.ome.itemex.shedule;
+package sh.ome.itemex.schedule;
 
 import java.io.BufferedReader;
 import java.io.IOException;

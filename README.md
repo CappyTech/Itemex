@@ -47,3 +47,20 @@ web_port: 8080
 
 Restart the server after changing the config.
 
+## Migrating from SQLite to MariaDB
+
+If you want to move existing data from the default SQLite database to MariaDB,
+use the provided `convert_sqlite_to_mysql.py` script located in the `Itemex/`
+folder.
+
+```bash
+# install dependencies
+pip install pymysql
+
+# edit the database settings at the bottom of the script then run
+python convert_sqlite_to_mysql.py
+```
+
+The script reads `itemex.db` and inserts the data into the MariaDB database you
+configure in the script.
+
