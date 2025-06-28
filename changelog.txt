@@ -20,6 +20,9 @@
 - Sanitized table name and used prepared statements in `blockOrder` to prevent SQL injection.
 - Replaced default database password in `config.yml` with placeholder.
 
+## [0.2.2] - Order sorting refinement
+- New orders with tied price are placed after older ones so earlier orders fill first.
+
 ## [0.3.0] - Web API enhancements
 - Added `/item/orders` endpoint with pagination for open orders.
 - `/item/history` now accepts a `limit` parameter.
@@ -35,4 +38,3 @@
 - Added MySQL and MongoDB dependencies and configuration options.
 - Implemented `MongoDbHandler` and updated database initialization logic.
 - Updated README and config examples.
-

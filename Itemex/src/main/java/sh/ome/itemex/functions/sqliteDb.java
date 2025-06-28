@@ -609,7 +609,7 @@ public class sqliteDb {
 
         // SELLORDERS
         try {
-            PreparedStatement stmt = c.prepareStatement("SELECT * FROM SELLORDERS WHERE itemid = ? ORDER by price ASC LIMIT 20");
+            PreparedStatement stmt = c.prepareStatement("SELECT * FROM SELLORDERS WHERE itemid = ? ORDER by price ASC, timestamp ASC LIMIT 20");
             stmt.setString(1, item);
             ResultSet rs = stmt.executeQuery();
 
@@ -640,7 +640,7 @@ public class sqliteDb {
 
         // BUYORDERS
         try {
-            PreparedStatement stmt = c.prepareStatement("SELECT * FROM BUYORDERS WHERE itemid = ? ORDER by price DESC LIMIT 20");
+            PreparedStatement stmt = c.prepareStatement("SELECT * FROM BUYORDERS WHERE itemid = ? ORDER by price DESC, timestamp ASC LIMIT 20");
             stmt.setString(1, item);
             ResultSet rs = stmt.executeQuery();
 
@@ -750,10 +750,10 @@ public class sqliteDb {
 
         String sql = null;
         if(table.equals("SELLORDERS")) {
-            sql = "SELECT * FROM SELLORDERS WHERE itemid = '" + itemid + "' ORDER by price ASC";
+            sql = "SELECT * FROM SELLORDERS WHERE itemid = '" + itemid + "' ORDER by price ASC, timestamp ASC";
         }
         else if(table.equals("BUYORDERS")) {
-            sql = "SELECT * FROM BUYORDERS WHERE itemid = '" + itemid + "' ORDER by price DESC";
+            sql = "SELECT * FROM BUYORDERS WHERE itemid = '" + itemid + "' ORDER by price DESC, timestamp ASC";
         }
 
         if (Itemex.c == null) {
@@ -835,9 +835,9 @@ public class sqliteDb {
 
         String orderSql = "";
         if (table.equals("SELLORDERS")) {
-            orderSql = "SELECT * FROM SELLORDERS ORDER BY price ASC";
+            orderSql = "SELECT * FROM SELLORDERS ORDER BY price ASC, timestamp ASC";
         } else if (table.equals("BUYORDERS")) {
-            orderSql = "SELECT * FROM BUYORDERS ORDER BY price DESC";
+            orderSql = "SELECT * FROM BUYORDERS ORDER BY price DESC, timestamp ASC";
         } else {
             return new ArrayList<>(bufferMap.values());
         }
