@@ -20,6 +20,9 @@
 - Sanitized table name and used prepared statements in `blockOrder` to prevent SQL injection.
 - Replaced default database password in `config.yml` with placeholder.
 
+## [0.2.2] - ChestShop cooldown improvements
+- Added timestamp updates on chest order modifications to prevent rapid trades between connected chests.
+
 ## [0.2.2] - Robust update checks
 - Update process now handles unreachable update server gracefully, avoiding runtime errors.
 
@@ -27,3 +30,4 @@
 - Added MySQL and MongoDB dependencies and configuration options.
 - Implemented `MongoDbHandler` and updated database initialization logic.
 - Updated README and config examples.
+

@@ -3,8 +3,6 @@
 /* BUGS AND IMPROVEMENTS:
 
 # Important
-- chestshop: if two chests buy from each other -> missing items! Need cooldown if chestorder is created
-
 # Nice to have #
 - /ix market order -> confirm also at GUI (right calculation)
 - add goat_horns, suspicious_stew, painting support, items with more than 1 enchantment
