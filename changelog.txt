@@ -22,3 +22,19 @@
 
 ## [0.2.2] - Order sorting refinement
 - New orders with tied price are placed after older ones so earlier orders fill first.
+
+## [0.3.0] - Web API enhancements
+- Added `/item/orders` endpoint with pagination for open orders.
+- `/item/history` now accepts a `limit` parameter.
+- Introduced `/stats` endpoint reporting basic server metrics.
+
+## [0.2.2] - ChestShop cooldown improvements
+- Added timestamp updates on chest order modifications to prevent rapid trades between connected chests.
+
+## [0.2.2] - Robust update checks
+- Update process now handles unreachable update server gracefully, avoiding runtime errors.
+
+## [0.3.0] - External database support
+- Added MySQL and MongoDB dependencies and configuration options.
+- Implemented `MongoDbHandler` and updated database initialization logic.
+- Updated README and config examples.

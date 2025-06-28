@@ -36,10 +36,15 @@ public class UpdateItemex {
 
 
         try {
-            server_version = new Scanner( url.openStream() ).useDelimiter("\\A").next();
+            server_version = new Scanner(url.openStream()).useDelimiter("\\A").next();
+        } catch (Exception e) {
+            getLogger().warning("Unable to reach update server: " + e.getMessage());
+            return; // graceful handling if server unavailable
         }
-        catch (Exception e){
-            getLogger().info("Exception: " + e);
+
+        if(server_version == null || server_version.isEmpty()) {
+            getLogger().warning("Update server returned no version information.");
+            return;
         }
 
         // if version on server is newer
