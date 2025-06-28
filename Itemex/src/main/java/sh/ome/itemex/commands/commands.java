@@ -57,7 +57,7 @@ public class commands {
         } else if (elements[0].equals("GOAT_HORN")) {
             return "[{\"itemid\":\"" + elements[0].toUpperCase() + "\"},{\"song\":\"" + elements[1] + "\"}]";
         } else if (elements[0].equals("SUSPICIOUS_STEW")) {
-            return "[{\"itemid\":\"" + elements[0].toUpperCase() + "\"},{\"stew_eff\":\"" + elements[1] + "\",\"stew_dur\":" + elements[2] + "}]";
+            return "[{\"itemid\":\"" + elements[0].toUpperCase() + "\"},{\"stew_eff\":\"" + elements[1] + "\",\"stew_amp\":" + elements[2] + ",\"stew_dur\":" + elements[3] + "}]";
         } else if (elements[0].equals("PAINTING")) {
             return "[{\"itemid\":\"" + elements[0].toUpperCase() + "\"},{\"paint\":\"" + elements[1] + "\"}]";
         } else if (elements[0].equals("FIREWORK_ROCKET")) {
@@ -90,7 +90,7 @@ public class commands {
 
         // SUSPICIOUS_STEW
         String stew_eff = "";
-        //String stew_amp = "";
+        String stew_amp = "";
         String stew_dur = "";
 
         // painting
@@ -127,8 +127,8 @@ public class commands {
             if(map.containsKey("stew_eff"))
                 stew_eff = map.get("stew_eff").toString();
             if(map.containsKey("stew_amp")) {
-                //Double doubleValue = (Double) map.get("stew_amp");
-                //stew_amp = Integer.toString(doubleValue.intValue());
+                Double doubleValue = (Double) map.get("stew_amp");
+                stew_amp = Integer.toString(doubleValue.intValue());
             }
             if(map.containsKey("stew_dur")) {
                 Double doubleValue = (Double) map.get("stew_dur");
@@ -156,7 +156,7 @@ public class commands {
         else if(itemid.equals("GOAT_HORN"))
             return itemid + ":" + song;
         else if(itemid.equals("SUSPICIOUS_STEW"))
-            return itemid + ":" + stew_eff + ":" + stew_dur;
+            return itemid + ":" + stew_eff + ":" + stew_amp + ":" + stew_dur;
         else if(itemid.equals("PAINTING"))
             return itemid + ":" + paint;
         else if(itemid.equals("FIREWORK_ROCKET"))
@@ -205,12 +205,15 @@ public class commands {
         // Check if the item is a goat horn
         if (item.getType() == Material.GOAT_HORN) {
             ItemMeta meta = item.getItemMeta();
-
-            int startIndex = meta.getAsString().indexOf("minecraft:") + "minecraft:".length();
-            String instrumentName = meta.getAsString().substring(startIndex, meta.getAsString().length() - 2);
-            Map<String, Object> enchantmentData = new HashMap<>();
-            enchantmentData.put("song", instrumentName);
-            enchantmentList.add(enchantmentData);
+            if (meta instanceof MusicInstrumentMeta) {
+                MusicInstrumentMeta mi = (MusicInstrumentMeta) meta;
+                MusicInstrument instr = mi.getInstrument();
+                if (instr != null) {
+                    Map<String, Object> enchantmentData = new HashMap<>();
+                    enchantmentData.put("song", instr.getKey().getKey());
+                    enchantmentList.add(enchantmentData);
+                }
+            }
         }
 
         // Check if the item is a suspicious stew
@@ -221,8 +224,8 @@ public class commands {
                 for (PotionEffect effect : stewMeta.getCustomEffects()) {
                     Map<String, Object> effectData = new HashMap<>();
                     effectData.put("stew_eff", effect.getType().getName());
+                    effectData.put("stew_amp", effect.getAmplifier());
                     effectData.put("stew_dur", effect.getDuration());
-                    //effectData.put("stew_amp", effect.getAmplifier());
                     enchantmentList.add(effectData);
                 }
             }
@@ -232,15 +235,14 @@ public class commands {
         // Check if the item is a painting
         if (item.getType() == Material.PAINTING) {
             ItemMeta meta = item.getItemMeta();
-            int startIndex = meta.getAsString().indexOf("minecraft:") + "minecraft:".length();
-
-            if (meta.getAsString().length() > startIndex + 3) { // Ensure the string is long enough
-                String entityName = meta.getAsString().substring(startIndex, meta.getAsString().length() - 3);
-                Map<String, Object> enchantmentData = new HashMap<>();
-                enchantmentData.put("paint", entityName);
-                enchantmentList.add(enchantmentData);
-            } else {
-
+            if (meta instanceof PaintingMeta) {
+                PaintingMeta pmeta = (PaintingMeta) meta;
+                Art art = pmeta.getArt();
+                if (art != null) {
+                    Map<String, Object> enchantmentData = new HashMap<>();
+                    enchantmentData.put("paint", art.name().toLowerCase());
+                    enchantmentList.add(enchantmentData);
+                }
             }
         }
 
@@ -321,6 +323,7 @@ public class commands {
         String itemid = "";
         String bp_name = "";
         int stew_dur = 0;
+        int stew_amp = 0;
         String stew_eff = "";
         String song = "";
         String paint = "";
@@ -382,6 +385,8 @@ public class commands {
                     // SUSPICIOUS_STEW
                 else if(key.equals("stew_eff"))
                     stew_eff = value.getAsString();
+                else if(key.equals("stew_amp"))
+                    stew_amp = value.getAsInt();
                 else if(key.equals("stew_dur"))
                     stew_dur = value.getAsInt();
                     // PAINTING
@@ -429,10 +434,15 @@ public class commands {
 
             // GOAT HORN
             else if (itemid.equals("GOAT_HORN")) {
-                // not implemented
-                //getLogger().info("Song: " + song);
-                //getLogger().info("GOAT_HORN NOT IMPLEMENTED!");
-                return new ItemStack(Material.AIR);
+                if (meta instanceof MusicInstrumentMeta) {
+                    MusicInstrumentMeta mi = (MusicInstrumentMeta) meta;
+                    try {
+                        MusicInstrument instrument = MusicInstrument.valueOf(song.toUpperCase());
+                        mi.setInstrument(instrument);
+                    } catch (IllegalArgumentException ignored) {
+                    }
+                    item.setItemMeta(mi);
+                }
             }
 
             // SUSPICIOUS_STEW
@@ -440,7 +450,7 @@ public class commands {
                 SuspiciousStewMeta stewMeta = (SuspiciousStewMeta) meta;
                 PotionEffectType potionEffectType = PotionEffectType.getByName(stew_eff);
                 if (potionEffectType != null) {
-                    PotionEffect potionEffect = new PotionEffect(potionEffectType, stew_dur * 20, 0); // Duration is in ticks (20 ticks = 1 second)
+                    PotionEffect potionEffect = new PotionEffect(potionEffectType, stew_dur * 20, stew_amp);
                     stewMeta.addCustomEffect(potionEffect, true);
                     item.setItemMeta(stewMeta);
                 }
@@ -448,10 +458,15 @@ public class commands {
 
             // PAINTING
             else if (itemid.equals("PAINTING")) {
-                // not implemented
-                //getLogger().info("paint: " + paint);
-                //getLogger().info("PAINTING NOT IMPLEMENTED!");
-                return new ItemStack(Material.AIR);
+                if (meta instanceof PaintingMeta) {
+                    PaintingMeta pmeta = (PaintingMeta) meta;
+                    try {
+                        Art art = Art.valueOf(paint.toUpperCase());
+                        pmeta.setArt(art);
+                    } catch (IllegalArgumentException ignored) {
+                    }
+                    item.setItemMeta(pmeta);
+                }
             }
 
             // ENCHANTED BOOK
@@ -601,7 +616,7 @@ public class commands {
 
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Itemex.logError("sendStats", e);
                 }
             });
 
