@@ -3,8 +3,6 @@
 /* BUGS AND IMPROVEMENTS:
 
 # Important
-- chestshop: if two chests buy from each other -> missing items! Need cooldown if chestorder is created
-
 # Nice to have #
 - /ix market order -> confirm also at GUI (right calculation)
 - add goat_horns, suspicious_stew, painting support, items with more than 1 enchantment
@@ -333,10 +331,13 @@ public final class Itemex extends JavaPlugin implements Listener {
 
 
         // checks database
-        if(database_type.equals("sqlite"))
+        if(database_type.equalsIgnoreCase("sqlite")) {
             createDatabase.createDBifNotExists();
-        else
+        } else if (database_type.equalsIgnoreCase("mariadb") || database_type.equalsIgnoreCase("mysql")) {
             createDatabase.createDBifNotExists_mariadb();
+        } else if (database_type.equalsIgnoreCase("mongodb")) {
+            createDatabase.createDBifNotExists_mongodb();
+        }
 
         c = createDatabase.createConnection();
 

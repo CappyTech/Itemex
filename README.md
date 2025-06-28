@@ -36,11 +36,11 @@ After installation a few basic commands are available:
 * `/ix help` – list all Itemex commands
 * `/i gui` – open the graphical interface
 
-Edit `plugins/Itemex/config.yml` to configure language, database type (SQLite or MariaDB) and other options.
+Edit `plugins/Itemex/config.yml` to configure language, database type (SQLite, MariaDB, MySQL or MongoDB) and other options.
 
 ```yaml
 lang: en
-# database_type: sqlite or mariadb
+# database_type: sqlite | mariadb | mysql | mongodb
 webui: true
 web_port: 8080
 ```

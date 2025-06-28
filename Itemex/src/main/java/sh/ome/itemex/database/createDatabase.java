@@ -3,6 +3,7 @@ package sh.ome.itemex.database;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import sh.ome.itemex.Itemex;
+import sh.ome.itemex.database.MongoDbHandler;
 
 import java.io.File;
 import java.sql.Connection;
@@ -15,10 +16,17 @@ public class createDatabase {
     public static Connection createConnection() {
         Connection c = null;
         try {
-            if (Itemex.database_type.equalsIgnoreCase("mariadb") || Itemex.database_type.equalsIgnoreCase("mysql")) {
+            if (Itemex.database_type.equalsIgnoreCase("mariadb")) {
                 Class.forName("org.mariadb.jdbc.Driver");
                 String url = "jdbc:mariadb://" + Itemex.db_hostname + ":" + Itemex.db_port + "/" + Itemex.db_name;
                 c = DriverManager.getConnection(url, Itemex.db_username, Itemex.db_passwd);
+            } else if (Itemex.database_type.equalsIgnoreCase("mysql")) {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                String url = "jdbc:mysql://" + Itemex.db_hostname + ":" + Itemex.db_port + "/" + Itemex.db_name + "?useSSL=false";
+                c = DriverManager.getConnection(url, Itemex.db_username, Itemex.db_passwd);
+            } else if (Itemex.database_type.equalsIgnoreCase("mongodb")) {
+                MongoDbHandler.getDatabase();
+                c = null;
             } else {
                 Class.forName("org.sqlite.JDBC");
                 Plugin plugin = Bukkit.getPluginManager().getPlugin("Itemex");
@@ -113,6 +121,10 @@ public class createDatabase {
 
             }
         }
+    }
+
+    public static void createDBifNotExists_mongodb() {
+        MongoDbHandler.createCollectionsIfNotExist();
     }
 
 

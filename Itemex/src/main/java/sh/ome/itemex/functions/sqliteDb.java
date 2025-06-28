@@ -609,7 +609,7 @@ public class sqliteDb {
 
         // SELLORDERS
         try {
-            PreparedStatement stmt = c.prepareStatement("SELECT * FROM SELLORDERS WHERE itemid = ? ORDER by price ASC LIMIT 20");
+            PreparedStatement stmt = c.prepareStatement("SELECT * FROM SELLORDERS WHERE itemid = ? ORDER by price ASC, timestamp ASC LIMIT 20");
             stmt.setString(1, item);
             ResultSet rs = stmt.executeQuery();
 
@@ -640,7 +640,7 @@ public class sqliteDb {
 
         // BUYORDERS
         try {
-            PreparedStatement stmt = c.prepareStatement("SELECT * FROM BUYORDERS WHERE itemid = ? ORDER by price DESC LIMIT 20");
+            PreparedStatement stmt = c.prepareStatement("SELECT * FROM BUYORDERS WHERE itemid = ? ORDER by price DESC, timestamp ASC LIMIT 20");
             stmt.setString(1, item);
             ResultSet rs = stmt.executeQuery();
 
@@ -750,10 +750,10 @@ public class sqliteDb {
 
         String sql = null;
         if(table.equals("SELLORDERS")) {
-            sql = "SELECT * FROM SELLORDERS WHERE itemid = '" + itemid + "' ORDER by price ASC";
+            sql = "SELECT * FROM SELLORDERS WHERE itemid = '" + itemid + "' ORDER by price ASC, timestamp ASC";
         }
         else if(table.equals("BUYORDERS")) {
-            sql = "SELECT * FROM BUYORDERS WHERE itemid = '" + itemid + "' ORDER by price DESC";
+            sql = "SELECT * FROM BUYORDERS WHERE itemid = '" + itemid + "' ORDER by price DESC, timestamp ASC";
         }
 
         if (Itemex.c == null) {
@@ -777,6 +777,55 @@ public class sqliteDb {
         return buffer;
     }
 
+    /**
+     * Returns a paginated list of orders for an item.
+     *
+     * @param table  "BUYORDERS" or "SELLORDERS"
+     * @param itemid Item identifier
+     * @param limit  maximum number of entries to return
+     * @param offset offset into the result set
+     */
+    public static ArrayList<OrderBuffer> getOrders(String table, String itemid, int limit, int offset) {
+        ArrayList<OrderBuffer> buffer = new ArrayList<>();
+
+        String sql = null;
+        if (table.equals("SELLORDERS")) {
+            sql = "SELECT * FROM SELLORDERS WHERE itemid = ? ORDER by price ASC LIMIT ? OFFSET ?";
+        } else if (table.equals("BUYORDERS")) {
+            sql = "SELECT * FROM BUYORDERS WHERE itemid = ? ORDER by price DESC LIMIT ? OFFSET ?";
+        }
+
+        if (Itemex.c == null) {
+            Itemex.c = createDatabase.createConnection();
+            getLogger().info("# WARN - reopen Database");
+        }
+
+        if (Itemex.c != null && sql != null) {
+            try (PreparedStatement stmt = Itemex.c.prepareStatement(sql)) {
+                stmt.setString(1, itemid);
+                stmt.setInt(2, limit);
+                stmt.setInt(3, offset);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        buffer.add(new OrderBuffer(
+                                rs.getInt("id"),
+                                rs.getString("player_uuid"),
+                                rs.getString("itemid"),
+                                rs.getString("ordertype"),
+                                rs.getInt("amount"),
+                                rs.getDouble("price"),
+                                rs.getLong("timestamp")
+                        ));
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            }
+        }
+
+        return buffer;
+    }
+
 
 
 
@@ -786,9 +835,9 @@ public class sqliteDb {
 
         String orderSql = "";
         if (table.equals("SELLORDERS")) {
-            orderSql = "SELECT * FROM SELLORDERS ORDER BY price ASC";
+            orderSql = "SELECT * FROM SELLORDERS ORDER BY price ASC, timestamp ASC";
         } else if (table.equals("BUYORDERS")) {
-            orderSql = "SELECT * FROM BUYORDERS ORDER BY price DESC";
+            orderSql = "SELECT * FROM BUYORDERS ORDER BY price DESC, timestamp ASC";
         } else {
             return new ArrayList<>(bufferMap.values());
         }
@@ -849,6 +898,29 @@ public class sqliteDb {
         return items;
     }
 
+    /** Count total orders in the given table. */
+    public static int countOrders(String table) {
+        String sql = "SELECT COUNT(*) as cnt FROM " + table;
+
+        if (Itemex.c == null) {
+            Itemex.c = createDatabase.createConnection();
+            getLogger().info("# WARN - reopen Database");
+        }
+
+        if (Itemex.c != null) {
+            try (Statement stmt = Itemex.c.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    return rs.getInt("cnt");
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            }
+        }
+
+        return 0;
+    }
+
 
 
     public static class ItemVolume {
@@ -870,6 +942,8 @@ public class sqliteDb {
         PreparedStatement pstmt = null;
         int update_status = 0;
         String sql;
+        boolean chestOrder = ordertype.contains("chest") || price <= 0;
+        long now = Instant.now().getEpochSecond();
 
         if(ordertype.contains("admin")) {
             return true;
@@ -882,20 +956,38 @@ public class sqliteDb {
 
         if (Itemex.c != null) {
             try {
-                if(price > 0)
-                    sql = "UPDATE " + table_name + " SET ordertype = ?, amount = ?, price = ? WHERE id = ?";
-                else // chest shop
-                    sql = "UPDATE " + table_name + " SET amount = ? WHERE id = ?";
+                if(price > 0) {
+                    if(chestOrder)
+                        sql = "UPDATE " + table_name + " SET ordertype = ?, amount = ?, price = ?, timestamp = ? WHERE id = ?";
+                    else
+                        sql = "UPDATE " + table_name + " SET ordertype = ?, amount = ?, price = ? WHERE id = ?";
+                }
+                else { // chest shop
+                    if(chestOrder)
+                        sql = "UPDATE " + table_name + " SET amount = ?, timestamp = ? WHERE id = ?";
+                    else
+                        sql = "UPDATE " + table_name + " SET amount = ? WHERE id = ?";
+                }
 
                 pstmt = Itemex.c.prepareStatement(sql);
                 if(price > 0) {
                     pstmt.setString(1, ordertype);
                     pstmt.setInt(2, amount);
                     pstmt.setDouble(3, price);
-                    pstmt.setInt(4, ID);
+                    if(chestOrder) {
+                        pstmt.setLong(4, now);
+                        pstmt.setInt(5, ID);
+                    } else {
+                        pstmt.setInt(4, ID);
+                    }
                 } else {
                     pstmt.setInt(1, amount);
-                    pstmt.setInt(2, ID);
+                    if(chestOrder) {
+                        pstmt.setLong(2, now);
+                        pstmt.setInt(3, ID);
+                    } else {
+                        pstmt.setInt(2, ID);
+                    }
                 }
 
                 update_status = pstmt.executeUpdate();
@@ -1101,15 +1193,32 @@ public class sqliteDb {
         double buyer_total = sub_total + (sub_total/100*Itemex.broker_fee_buyer);
         double seller_total = sub_total - (sub_total/100*Itemex.broker_fee_seller);
 
-        OfflinePlayer o_seller = Bukkit.getOfflinePlayer(UUID.fromString(seller_uuid));
-        OfflinePlayer o_buyer = Bukkit.getOfflinePlayer(UUID.fromString(buyer_uuid));
-        Player seller = Bukkit.getPlayer(UUID.fromString(seller_uuid));
-        Player buyer = Bukkit.getPlayer(UUID.fromString(buyer_uuid));
+        OfflinePlayer o_seller = null;
+        OfflinePlayer o_buyer = null;
+        Player seller = null;
+        Player buyer = null;
 
-        double buyer_balance = econ.getBalance(o_buyer);
+        try {
+            if (seller_uuid != null && !seller_uuid.isEmpty() && !seller_uuid.equalsIgnoreCase("admin")) {
+                UUID suuid = UUID.fromString(seller_uuid);
+                o_seller = Bukkit.getOfflinePlayer(suuid);
+                seller = Bukkit.getPlayer(suuid);
+            }
+        } catch (IllegalArgumentException ignored) {}
+
+        try {
+            if (buyer_uuid != null && !buyer_uuid.isEmpty() && !buyer_uuid.equalsIgnoreCase("admin")) {
+                UUID buuid = UUID.fromString(buyer_uuid);
+                o_buyer = Bukkit.getOfflinePlayer(buuid);
+                buyer = Bukkit.getPlayer(buuid);
+            }
+        } catch (IllegalArgumentException ignored) {}
+
+        double buyer_balance = (o_buyer != null) ? econ.getBalance(o_buyer) : 0;
 
         if(be_ordertype.contains("admin")) {                        // buyorder is admin
-            econ.depositPlayer(o_seller, seller_total);             // give money to seller
+            if(o_seller != null)
+                econ.depositPlayer(o_seller, seller_total);             // give money to seller
             if(seller != null)
                 seller.sendMessage("" + Itemex.language.getString("sellorder_C") + ChatColor.GREEN+ Itemex.language.getString("sq_fulfilled") + ChatColor.WHITE + Itemex.language.getString("sq_you_sold") + " [" + amount + "] "  + get_meta(itemid) + Itemex.language.getString("sq_for") + ChatColor.GREEN + " " + format_price( seller_total ) );
             insertFullfilledOrders(seller_uuid, "admin", itemid, amount, price); // Insert Fullfilled order into db
@@ -1117,7 +1226,8 @@ public class sqliteDb {
         }
         else if(se_ordertype.contains("admin")) {                   // sellorder is admin
             if( buyer_total < buyer_balance) {
-                econ.withdrawPlayer(o_buyer, buyer_total);          // subtract money from buyer
+                if(o_buyer != null)
+                    econ.withdrawPlayer(o_buyer, buyer_total);          // subtract money from buyer
                 if(buyer == null) {
                     insertPayout(buyer_uuid, itemid, amount);       // Insert item payout into db
                 }
@@ -1167,8 +1277,10 @@ public class sqliteDb {
             //getLogger().info("# DEBUG: at refund - Player have enough money" );
 
             if(!be_ordertype.equals("refund")) {
-                econ.depositPlayer(o_seller, seller_total);         // give money to seller
-                econ.withdrawPlayer(o_buyer, buyer_total);          // subtract money from buyer
+                if(o_seller != null)
+                    econ.depositPlayer(o_seller, seller_total);         // give money to seller
+                if(o_buyer != null)
+                    econ.withdrawPlayer(o_buyer, buyer_total);          // subtract money from buyer
             }
 
             //getLogger().info("# DEBUG: insertfulfilledorders at withdaw");
