@@ -52,9 +52,9 @@ import sh.ome.itemex.commands.ix_command;
 import sh.ome.itemex.functions.i_autocompletion;
 import sh.ome.itemex.functions.ix_autocompletion;
 import sh.ome.itemex.functions.sqliteDb;
-import sh.ome.itemex.shedule.DataDifferenceSender;
-import sh.ome.itemex.shedule.Metrics;
-import sh.ome.itemex.shedule.UpdateItemex;
+import sh.ome.itemex.schedule.DataDifferenceSender;
+import sh.ome.itemex.schedule.Metrics;
+import sh.ome.itemex.schedule.UpdateItemex;
 
 import java.io.*;
 import java.net.HttpURLConnection;

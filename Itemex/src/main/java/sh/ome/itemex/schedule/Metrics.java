@@ -12,7 +12,7 @@
  *
  * Violations will result in a ban of your plugin and account from bStats.
  */
-package sh.ome.itemex.shedule;
+package sh.ome.itemex.schedule;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
