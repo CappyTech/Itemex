@@ -330,10 +330,13 @@ public final class Itemex extends JavaPlugin implements Listener {
 
 
         // checks database
-        if(database_type.equals("sqlite"))
+        if(database_type.equalsIgnoreCase("sqlite")) {
             createDatabase.createDBifNotExists();
-        else
+        } else if (database_type.equalsIgnoreCase("mariadb") || database_type.equalsIgnoreCase("mysql")) {
             createDatabase.createDBifNotExists_mariadb();
+        } else if (database_type.equalsIgnoreCase("mongodb")) {
+            createDatabase.createDBifNotExists_mongodb();
+        }
 
         c = createDatabase.createConnection();
 
